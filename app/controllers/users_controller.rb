@@ -13,7 +13,8 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find_by params[:id]
-    redirect_to root_path and return unless true
+    # redirect_to root_path and return unless true
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
 
   def create
@@ -48,14 +49,6 @@ class UsersController < ApplicationController
   private
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
-    end
-
-    def logged_in_user
-      unless logged_in?
-        store_location
-        flash[:danger] = "Please log in"
-        redirect_to login_path
-      end
     end
 
     def correct_user
